@@ -53,7 +53,7 @@ Everything that fails validation is counted, not silently dropped — the functi
 
 Below is a before/after comparison on a real run against the sample dataset:
 
-![Before and after cleaning](assets/before_after_cleaning.png)
+![Before and after cleaning](assets/cleaned_data.png)
 
 | Platform | Total processed | Success | Incomplete |
 |---|---|---|---|
