@@ -59,7 +59,7 @@ Below is a before/after comparison on a real run against the sample dataset:
 |---|---|---|---|
 | Python (direct OAuth) | 239 | 73 | 166 |
 | n8n | 239 | 73 | 166 |
-| Make.com | 239 | 69 | 170 |
+| Make.com | 239 | 71 | 168 |
 
 Python and n8n — two independently built implementations against the same source data — agree exactly. The Make.com run was captured during an earlier debugging pass, before a Google Sheets range misconfiguration (see Technical Notes below) was corrected; the discrepancy is consistent with the header row being included in that run rather than a logic difference.
 
