@@ -1,0 +1,268 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "76470f1f-b24c-4b30-93ec-23d29d56328a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1TWQwkwfTBNkPKG-0j3bj5e9133vb2amRi_NNg1CGrJ4",
+          "mode": "list",
+          "cachedResultName": "random_dirty_data3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TWQwkwfTBNkPKG-0j3bj5e9133vb2amRi_NNg1CGrJ4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1612773941,
+          "mode": "list",
+          "cachedResultName": "random_dirty_data3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TWQwkwfTBNkPKG-0j3bj5e9133vb2amRi_NNg1CGrJ4/edit#gid=1612773941"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e9d09904-ac26-4e17-b491-e803da16dfc1",
+      "name": "Get row(s) in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IZdZ3lJ3ixfZbAqt",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "cleaned_data = []\n\nfor item in _items:\n    row = item[\"json\"]\n\n    product_name = str(row.get(\"Product Name\") or \"\").strip()\n    price = str(row.get(\"Price\") or \"\").strip()\n    company = str(row.get(\"Company\") or \"\").strip()\n    tel = str(row.get(\"Tel\") or \"\").strip()\n    location = str(row.get(\"Location\") or \"\").strip()\n\n    if not product_name:\n        continue\n    if not price or price.upper() == \"CALL FOR PRICE\":\n        continue\n    if not company or not tel or not location:\n        continue\n\n    row[\"Product Name\"] = product_name.lower()\n\n    cleaned_data.append({\"json\": row})\n\nreturn cleaned_data"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "870fd651-ab5a-4d57-a61c-7b2e46cd2499",
+      "name": "Code in Python"
+    },
+    {
+      "parameters": {
+        "sendTo": "s0933500@gmail.com",
+        "subject": "data_cleaned_summary",
+        "emailType": "text",
+        "message": "=Dirty data has been cleaned. ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "20bd096f-1a4b-411a-8476-f441334f9b57",
+      "name": "Send a message",
+      "webhookId": "c3dac89e-ef8b-41da-82ad-e36b0c54868f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "HRUBs5yH1FifGHFG",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1TWQwkwfTBNkPKG-0j3bj5e9133vb2amRi_NNg1CGrJ4",
+          "mode": "list",
+          "cachedResultName": "random_dirty_data3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TWQwkwfTBNkPKG-0j3bj5e9133vb2amRi_NNg1CGrJ4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 491907871,
+          "mode": "list",
+          "cachedResultName": "clean_data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TWQwkwfTBNkPKG-0j3bj5e9133vb2amRi_NNg1CGrJ4/edit#gid=491907871"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Name": "={{ $json['Product Name'] }}",
+            "Price": "={{ $json.Price }}",
+            "Company": "={{ $json.Company }}",
+            "Tel": "={{ $json.Tel }}",
+            "Location": "={{ $json.Location }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price",
+              "displayName": "Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tel",
+              "displayName": "Tel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "a7d02dfa-456a-4326-9a68-e52d3fb7bbcd",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IZdZ3lJ3ixfZbAqt",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "4997a0da-162f-4068-9de8-41502a64f04d",
+      "name": "Aggregate"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b2508420-6dd3-4fd2-9add-bd9133323f90",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8db9ae38ceb6c165eeb89906fd9576c67cf4d357411e0db5f2b06be1deb0e061"
+  },
+  "nodeGroups": [],
+  "id": "e8pzS8xA938xrkst",
+  "tags": []
+}
