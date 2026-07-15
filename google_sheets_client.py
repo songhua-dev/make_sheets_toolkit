@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# 強制切換至腳本目錄
+# Force change to script directory
 script_dir = Path(__file__).resolve().parent
 os.chdir(script_dir)
 
@@ -24,22 +24,22 @@ def get_client():
         with open(TOKEN_PATH, "rb") as f:
             creds = pickle.load(f)
 
-    # 如果憑證不存在，或者憑證無效且無法刷新，就進行完整授權
+    # If credentials do not exist, or are invalid and cannot be refreshed, perform full authorization
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
             except Exception:
-                # 刷新失敗，刪除舊憑證並強制重新取得
+                # Refresh failed, remove old credentials and force re-acquisition
                 os.remove(TOKEN_PATH)
                 flow = InstalledAppFlow.from_client_secrets_file(CREDS_PATH, SCOPES)
                 creds = flow.run_local_server(port=0)
         else:
-            # 沒有 token 或不需要/無法刷新時
+            # When no token exists or refreshing is not needed/possible
             flow = InstalledAppFlow.from_client_secrets_file(CREDS_PATH, SCOPES)
             creds = flow.run_local_server(port=0)
 
-        # 寫入更新後的憑證
+        # Save the updated credentials
         with open(TOKEN_PATH, "wb") as f:
             pickle.dump(creds, f)
 
